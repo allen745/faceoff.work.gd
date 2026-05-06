@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faceoff</title>
+</head>
+
+<body style="background-color: lightblue;">
+
+  <center><h1>Who look more beautiful!...</h1></center>
+  <h3><font color="blue">
+    <p>This web show you photo of girls, you have to choose the most beautiful one</p>
+  </font></h3>
+<h4>If you find your girl here we dont care... </h4>
+
+  <style>
+    .img-card { border-radius: 12px; overflow: hidden; border: 2px solid transparent;
+      cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+    .img-card:hover { border-color: #aaa; transform: scale(1.02); }
+    .img-card.selected { border-color: #1D9E75; }
+    .img-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .label { font-size: 13px; text-align: center; padding: 8px 0; }
+  </style>
+
+  <div style="max-width:560px; margin:0 auto;">
+    <p id="pick-text" style="text-align:center; color:gray;">Pick your favourite — it stays, the other gets replaced</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" id="grid"></div>
+    <p id="status" style="text-align:center; font-size:13px; color:gray;"></p>
+  </div>
+
+  <!-- WINNER SECTION -->
+  <div id="result" style="display:none; text-align:center; margin-top:30px;">
+    <p style="font-size:22px; color:darkblue; font-weight:bold;">
+      According to you most beautiful girl is her 💚
+    </p>
+    <img id="winner-img" src="" alt="Winner"
+      style="width:280px; height:280px; object-fit:cover; border-radius:16px; border:3px solid #1D9E75; margin-top:16px;">
+    <div id="winner-name"
+      style="font-size:16px; color:#333; margin-top:8px; font-weight:500;">
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      { src: "C:\\Users\\allen\\OneDrive\\Desktop\\wallpaper\\BMW I8 coupe.png", label: "BMW I8 Coupe" },
+      { src: "C:\\Users\\allen\\OneDrive\\Desktop\\wallpaper\\BMW.jpg",          label: "BMW" },
+      { src: "C:\\Users\\allen\\OneDrive\\Desktop\\wallpaper\\BMW M5.jpg",       label: "BMW M5" },
+    ];
+
+    let pool = [...images], slots = [null, null], nextIdx = 0;
+    let lastPicked = null;  // ✅ tracks the last chosen image
+
+    function draw() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      slots.forEach((img, i) => {
+        if (!img) return;
+        const card = document.createElement('div');
+        card.className = 'img-card';
+        card.innerHTML = `<img src="${img.src}"><div class="label">${img.label}</div>`;
+        card.onclick = () => pick(i);
+        grid.appendChild(card);
+      });
+      const rem = pool.length - nextIdx;
+      document.getElementById('status').textContent =
+        rem > 0 ? `${rem} images remaining` : '';
+    }
+
+    function pick(chosenSlot) {
+      lastPicked = slots[chosenSlot];  // ✅ save who was picked
+
+      document.querySelectorAll('.img-card')[chosenSlot].classList.add('selected');
+
+      setTimeout(() => {
+        const other = chosenSlot === 0 ? 1 : 0;
+
+        if (nextIdx < pool.length) {
+          slots[other] = pool[nextIdx++];
+          draw();
+        } else {
+          showWinner();  // ✅ no more images, show winner
+        }
+      }, 350);
+    }
+
+    function showWinner() {
+      document.getElementById('grid').style.display = 'none';
+      document.getElementById('status').style.display = 'none';
+      document.getElementById('pick-text').style.display = 'none';
+
+      document.getElementById('winner-img').src = lastPicked.src;
+      document.getElementById('winner-name').textContent = lastPicked.label;
+      document.getElementById('result').style.display = 'block';  // ✅ show winner
+    }
+
+    slots[0] = pool[nextIdx++];
+    slots[1] = pool[nextIdx++];
+    draw();
+  </script>
+<center><h5>made with love</h5></center>
+</body>
+</html>
